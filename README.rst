@@ -5,11 +5,12 @@ A StatsD dependency for `nameko <http://nameko.readthedocs.org>`_, enabling
 services to send stats.
 
 
+
 Usage
 -----
 
-To use the dependency you declare it on the service and then you can use
-it within any of the service methods (entrypoints, simple methods, etc.).
+To use the dependency you simply declare it on the service and then you
+can use it within any of the service methods (entrypoints, simple methods, etc.).
 
 
 .. code-block:: python
@@ -40,18 +41,20 @@ access without having to go through the client itself.  The dependency
 acts as a pass-through for them.  They are: ``incr``, ``decr``, ``gauge``,
 ``set``, and ``timing``.
 
-In the above code example (``get_data``), you can see how we access ``incr``.
+In the above code example, you can see how we access ``incr`` and ``gauge``.
 
 You can also decorate any method in the service with the ``timer`` decorator,
 as shown in the example.  This allows you to time any method without having
 to change its logic.
 
 
+
 Configuration
 -------------
 
-The library expects to find the following values in the config file you
-use for your service (you need one configuration block per statsd server):
+The library expects the following values to be in the config file you
+use for your service (you need one configuration block per different
+statsd server):
 
 .. code-block:: yaml
 
@@ -76,6 +79,7 @@ according to how it is set (``true``/``false``).  In this example, production
 is enabled while staging is not.
 
 
+
 Minimum setup
 -------------
 
@@ -84,11 +88,11 @@ config values.  This means that when we write our service we don't have
 access to the actual dependencies (they are injected later).
 
 In order to give the users of this library the ability to decorate
-methods with the ``timer`` decorator, we need to do a little bit of wiring
+methods with the ``timer`` decorator, we need to do a little wiring
 behind the scenes.  The only thing required for the end user is to write
 the service class so that it inherits from ``nameko_statsd.ServiceBase``.
 
-The type of ``nameko_statsd.ServiceBase`` is a custom metaclass that
+The *type* of ``nameko_statsd.ServiceBase`` is a custom metaclass that
 provides the necessary wirings to any ``nameko_statsd.StatsD`` dependency.
 
 If you cannot inherit from ``nameko_statsd.ServiceBase`` for any reason,
@@ -115,6 +119,7 @@ is equivalent to (notice it inherits from ``object``):
         statsd = StatsD('statsd-prod', name='statsd')
 
         ...
+
 
 
 The ``StatsD.timer`` decorator
@@ -156,3 +161,17 @@ is equivalent to the following:
         def another_method(...):
             with self.statsd.client.timer('another-stat'):
                 # method body
+
+
+
+About the lazy client
+---------------------
+
+When you attach a ``nameko_statsd.StatsD`` dependency to your service, no
+client is created.  Only when you use the dependency explicitly or when
+you run a method that has been decorated with the ``timer`` decorator,
+a client is created.
+
+This lazy feature means you can attach as many ``nameko_statsd.StatsD``
+dependencies to your service as you fancy, and no client will be created
+unless it is actually used.
