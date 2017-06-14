@@ -5,7 +5,6 @@ A StatsD dependency for `nameko <http://nameko.readthedocs.org>`_, enabling
 services to send stats.
 
 
-
 Usage
 -----
 
@@ -72,13 +71,13 @@ use for your service (you need one configuration block per statsd server):
 
 
 The first four values are passed directly to ``statsd.StatsClient`` on
-creation.  The last one, ``enabled`` will activate/deactivate all stats,
+creation.  The last one, ``enabled``, will activate/deactivate all stats,
 according to how it is set (``true``/``false``).  In this example, production
 is enabled while staging is not.
 
 
-The ``StatsD.timer`` decorator
-------------------------------
+Minimum setup
+-------------
 
 At the time of writing a Nameko service, you don't have access to the
 config values.  This means that when we write our service we don't have
@@ -87,10 +86,39 @@ access to the actual dependencies (they are injected later).
 In order to give the users of this library the ability to decorate
 methods with the ``timer`` decorator, we need to do a little bit of wiring
 behind the scenes.  The only thing required for the end user is to write
-the service class so that inherits from ``nameko_statsd.ServiceBase``.
+the service class so that it inherits from ``nameko_statsd.ServiceBase``.
 
 The type of ``nameko_statsd.ServiceBase`` is a custom metaclass that
 provides the necessary wirings to any ``nameko_statsd.StatsD`` dependency.
+
+If you cannot inherit from ``nameko_statsd.ServiceBase`` for any reason,
+all you have to do is to make sure you pass a ``name`` argument to any
+``nameko_statsd.StatsD`` dependency, the value of which has to match the
+attribute name of the dependency itself.
+
+The following configuration:
+
+.. code-block:: python
+
+    class MyService(ServiceBase):
+
+        statsd = StatsD('statsd-prod')
+
+        ...
+
+is equivalent to (notice it inherits from ``object``):
+
+.. code-block:: python
+
+    class MyService(object):
+
+        statsd = StatsD('statsd-prod', name='statsd')
+
+        ...
+
+
+The ``StatsD.timer`` decorator
+------------------------------
 
 You can pass any arguments to the decorator, they will be given to the
 ``statsd.StatsClient.timer`` decorator.
@@ -128,26 +156,3 @@ is equivalent to the following:
         def another_method(...):
             with self.statsd.client.timer('another-stat'):
                 # method body
-
-
-If you cannot inherit from ``nameko_statsd.ServiceBase`` for any reason,
-all you have to do is to make sure you pass a ``name`` argument to any
-``nameko_statsd.StatsD`` dependency, the value of which has to match the
-attribute name of the dependency itself, as shown in the following
-example (notice the service class inherits from ``object``):
-
-.. code-block:: python
-
-    class MyService(object):
-
-        statsd = StatsD('statsd-prod', name='statsd')
-        another_statsd = StatsD('statsd-prod2', name='another_statsd')
-
-        @entrypoint
-        @statsd.timer('my_stat', rate=5)
-        def method(...):
-            # method body
-
-        @another_statsd.timer('another-stat')
-        def another_method(...):
-            # method body
