@@ -21,7 +21,7 @@ path.py==10.3.1           # via nameko
 pbr==3.0.1                # via mock
 pyyaml==3.12              # via nameko
 requests==2.17.3          # via nameko
-six==1.10.0               # via mock, nameko
+six==1.10.0
 statsd==3.2.1
 urllib3==1.21.1           # via requests
 werkzeug==0.12.2          # via nameko

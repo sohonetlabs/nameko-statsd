@@ -38,8 +38,9 @@ class LazyClient(object):
 
 class StatsD(DependencyProvider):
 
-    def __init__(self, name, *args, **kwargs):
-        self.__name = name
+    def __init__(self, key, name='', *args, **kwargs):
+        self._key = key
+        self._name = name
         super(StatsD, self).__init__(*args, **kwargs)
 
     def get_dependency(self, worker_ctx):
@@ -50,14 +51,7 @@ class StatsD(DependencyProvider):
         return super(StatsD, self).setup()
 
     def get_config(self):
-        config = self.container.config['STATSD']
-        return dict(
-            host=config['host'],
-            port=config['port'],
-            prefix=config['prefix'],
-            maxudpsize=config['maxudpsize'],
-            enabled=config['enabled']
-        )
+        return self.container.config['STATSD'][self._key]
 
     def timer(self, *targs, **tkwargs):
 
@@ -65,7 +59,7 @@ class StatsD(DependencyProvider):
 
             @wraps(method)
             def wrapper(svc, *args, **kwargs):
-                dependency = getattr(svc, self.__name)
+                dependency = getattr(svc, self._name)
 
                 if dependency.enabled:
                     with dependency.client.timer(*targs, **tkwargs):
