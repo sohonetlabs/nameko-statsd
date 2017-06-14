@@ -1,4 +1,3 @@
-from copy import deepcopy
 from mock import call, Mock, patch
 
 import pytest
@@ -8,6 +7,8 @@ from nameko_statsd.statsd_dep import StatsD, LazyClient
 
 
 class TestStatsD(object):
+
+    """Test the dependency provider mechanics. """
 
     @pytest.fixture
     def lazy_client_cls(self):
@@ -40,7 +41,7 @@ class DummyService(object):
 
     """Fake Service to test the `StatsD.timer` decorator. """
 
-    name = 'test_service'
+    name = 'dummy_service'
 
     sd = StatsD('sd')
 
@@ -53,6 +54,8 @@ class DummyService(object):
 
 
 class TestTimer(object):
+
+    """Test the `StatsD.timer` decorator. """
 
     @pytest.fixture
     def config(self, stats_config):
@@ -92,9 +95,11 @@ class TestTimer(object):
 
 class TestLazyClient(object):
 
+    """Test the `LazyClient` class features. """
+
     @pytest.fixture
     def stats_config(self, stats_config):
-        return stats_config['STATSD']
+        return stats_config['STATSD'].copy()
 
     @pytest.fixture
     def stats_client_cls(self):
@@ -135,17 +140,14 @@ class TestLazyClient(object):
     def test_passthrough_methods(self, method, stats_client_cls, stats_config):
         lc = LazyClient(**stats_config)
 
-        args = (1, 2, 3, 'a')
-        kwargs = dict(a=1, b='2')
-
         delegate = getattr(lc, method)
 
         # make the call
-        delegate(*deepcopy(args), **deepcopy(kwargs))
+        delegate(1, 2, 3, 'Darth Vader', obi_wan='Kenobi')
 
         # verify it's a passthrough
         assert getattr(lc.client, method).call_args_list == [
-            call(*args, **kwargs)
+            call(1, 2, 3, 'Darth Vader', obi_wan='Kenobi')
         ]
 
     @pytest.mark.parametrize('method', [
@@ -157,13 +159,10 @@ class TestLazyClient(object):
         stats_config['enabled'] = False
         lc = LazyClient(**stats_config)
 
-        args = (1, 2, 3, 'a')
-        kwargs = dict(a=1, b='2')
-
         delegate = getattr(lc, method)
 
         # make the call
-        delegate(*deepcopy(args), **deepcopy(kwargs))
+        delegate(1, 2, 3, 'Darth Vader', obi_wan='Kenobi')
 
         assert getattr(lc.client, method).call_args_list == []
 

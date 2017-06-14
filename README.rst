@@ -90,9 +90,13 @@ So, for example:
 
         statsd = StatsD('statsd')
 
-        @rpc (or @http or even nothing)
+        @entrypoint
         @statsd.timer('my_stat', rate=5)
         def method(...):
+            # method body
+
+        @statsd.timer('another-stat')
+        def another_method(...):
             # method body
 
 is equivalent to the following:
@@ -103,7 +107,11 @@ is equivalent to the following:
 
         statsd = StatsD('statsd')
 
-        @rpc (or @http or even nothing)
+        @entrypoint
         def method(...):
             with self.statsd.client.timer('my_stat', rate=5):
+                # method body
+
+        def another_method(...):
+            with self.statsd.client.timer('another-stat'):
                 # method body
