@@ -121,7 +121,7 @@ The ``StatsD.timer`` decorator
 ------------------------------
 
 You can pass any arguments to the decorator, they will be given to the
-``statsd.StatsClient.timer`` decorator.
+``statsd.StatsClient().timer`` decorator.
 
 So, for example:
 
