@@ -164,6 +164,12 @@ is equivalent to the following:
                 # method body
 
 
+.. warning::
+    When using ``self.statsd.client.timer`` as a context manager, you're
+    bypassing the dependency, which means that the timer will be acted
+    regardless of how the ``enabled`` setting is configured.
+
+
 
 About the lazy client
 ---------------------
