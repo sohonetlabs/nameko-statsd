@@ -38,14 +38,14 @@ class LazyClient(object):
 
 class StatsD(DependencyProvider):
 
-    def __init__(self, key, name='', *args, **kwargs):
+    def __init__(self, key, name=None, *args, **kwargs):
         """
         Args:
             key (str): The key under the `STATSD` config dictionary.
-            name (str, optional): The name associated to the instance.
+            name (str): The name associated to the instance.
         """
         self._key = key
-        self._name = name
+        self._name = name or ''
         super(StatsD, self).__init__(*args, **kwargs)
 
     def get_dependency(self, worker_ctx):
