@@ -9,7 +9,7 @@ def reqs(filepath):
 
 setup(
     name='nameko-statsd',
-    version='0.0.1',
+    version='0.0.2',
     description='StatsD dependency for nameko services',
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',
@@ -20,7 +20,7 @@ setup(
         'dev': reqs('requirements/dev.txt'),
     },
     zip_safe=True,
-    license='Apache License, Version 2.0',
+    license='MIT',
     classifiers=[
         "Programming Language :: Python",
         "Operating System :: MacOS :: MacOS X",
