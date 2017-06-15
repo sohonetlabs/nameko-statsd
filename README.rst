@@ -19,7 +19,7 @@ can use it within any of the service methods (entrypoints, simple methods, etc.)
 
     class Service(ServiceBase):
 
-        statsd = StatsD('statsd-prod')
+        statsd = StatsD('prod1')
 
         @entrypoint
         @statsd.timer('process_data')
@@ -54,29 +54,30 @@ Configuration
 
 The library expects the following values to be in the config file you
 use for your service (you need one configuration block per different
-statsd server):
+statsd server).  For example, if we had two statsd servers, prod1 and
+prod2, we would have something like this:
 
 .. code-block:: yaml
 
     STATSD:
-      statsd-prod:
-        host: "host-prod"
+      prod1:
+        host: "host1"
         port: 8125
-        prefix: "prod-prefix"
+        prefix: "prefix-1"
         maxudpsize: 512
         enabled: true
-      statsd-staging:
-        host: "host-staging"
+      prod2:
+        host: "host2"
         port: 8125
-        prefix: "staging-prefix"
+        prefix: "prefix-2"
         maxudpsize: 512
         enabled: false
 
 
 The first four values are passed directly to ``statsd.StatsClient`` on
 creation.  The last one, ``enabled``, will activate/deactivate all stats,
-according to how it is set (``true``/``false``).  In this example, production
-is enabled while staging is not.
+according to how it is set (``true``/``false``).  In this example,
+production 1 is enabled while production 2 is not.
 
 
 
@@ -106,7 +107,7 @@ The following configuration:
 
     class MyService(ServiceBase):
 
-        statsd = StatsD('statsd-prod')
+        statsd = StatsD('prod1')
 
         ...
 
@@ -116,7 +117,7 @@ is equivalent to (notice it inherits from ``object``):
 
     class MyService(object):
 
-        statsd = StatsD('statsd-prod', name='statsd')
+        statsd = StatsD('prod1', name='statsd')
 
         ...
 
@@ -134,7 +135,7 @@ So, for example:
 
     class MyService(ServiceBase):
 
-        statsd = StatsD('statsd-prod')
+        statsd = StatsD('prod1')
 
         @entrypoint
         @statsd.timer('my_stat', rate=5)
@@ -151,7 +152,7 @@ is equivalent to the following:
 
     class MyService(ServiceBase):
 
-        statsd = StatsD('statsd-prod')
+        statsd = StatsD('prod1')
 
         @entrypoint
         def method(...):
