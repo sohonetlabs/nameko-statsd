@@ -26,7 +26,7 @@ class LazyClient(object):
         return self._client
 
     def __getattr__(self, name):
-        if name in ('incr', 'decr', 'gauge', 'set', 'timing'):
+        if name in ('incr', 'decr', 'gauge', 'set', 'timer'):
             return partial(self._passthrough, name)
         else:
             return super(LazyClient, self).__getattr__(name)
