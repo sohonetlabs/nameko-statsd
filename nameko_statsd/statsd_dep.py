@@ -1,7 +1,11 @@
 from functools import wraps, partial
+from contextlib import contextmanager
 
 from nameko.extensions import DependencyProvider
 from statsd import StatsClient
+
+
+noop = contextmanager(lambda: (yield True))
 
 
 class LazyClient(object):
@@ -34,6 +38,7 @@ class LazyClient(object):
     def _passthrough(self, name, *args, **kwargs):
         if self.enabled:
             return getattr(self.client, name)(*args, **kwargs)
+        return noop()
 
 
 class StatsD(DependencyProvider):
