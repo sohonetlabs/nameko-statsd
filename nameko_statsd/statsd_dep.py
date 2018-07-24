@@ -1,4 +1,5 @@
 from functools import wraps, partial
+from mock import MagicMock
 
 from nameko.extensions import DependencyProvider
 from statsd import StatsClient
@@ -37,6 +38,12 @@ class LazyClient(object):
     def _passthrough(self, name, *args, **kwargs):
         if self.enabled:
             return getattr(self.client, name)(*args, **kwargs)
+
+    def timer(self, *args, **kwargs):
+        if self.enabled:
+            return self.client.timer(*args, **kwargs)
+        else:
+            return MagicMock()
 
 
 class StatsD(DependencyProvider):
