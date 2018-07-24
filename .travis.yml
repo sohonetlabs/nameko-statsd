@@ -9,8 +9,10 @@ install:
 
 env:
   - TOX_ENV=py27-test
-  - TOX_ENV=py33-test
   - TOX_ENV=py34-test
+  - TOX_ENV=py35-test
+  - TOX_ENV=py36-test
+  - TOX_ENV=py37-test
 
 script:
   - tox -e $TOX_ENV
