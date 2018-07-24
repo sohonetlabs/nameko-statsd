@@ -80,5 +80,9 @@ class TestLazyClient(object):
     def test_getattr(self, stats_client_cls, stats_config):
         lc = LazyClient(**stats_config)
 
-        with pytest.raises(AttributeError):
+        with pytest.raises(AttributeError) as exc_info:
             lc.missing_method()
+
+        assert exc_info.match(
+            "'LazyClient' object has no attribute 'missing_method'"
+        )
