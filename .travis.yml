@@ -1,4 +1,3 @@
-dist: xenial
 sudo: false
 language: python
 
@@ -18,9 +17,6 @@ matrix:
 
     - python: 3.6
       env: TOX_ENV=py36-test
-
-    - python: 3.7
-      env: TOX_ENV=py37-test
 
 script:
   - tox -e $TOX_ENV
