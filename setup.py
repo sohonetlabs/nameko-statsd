@@ -9,7 +9,7 @@ def reqs(filepath):
 
 setup(
     name='nameko-statsd',
-    version='0.0.3',
+    version='0.0.4',
     description='StatsD dependency for nameko services',
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',
@@ -28,8 +28,10 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Intended Audience :: Developers",
