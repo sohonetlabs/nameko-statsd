@@ -1,4 +1,5 @@
 from functools import wraps, partial
+from mock import MagicMock
 
 from nameko.extensions import DependencyProvider
 from statsd import StatsClient
@@ -29,11 +30,20 @@ class LazyClient(object):
         if name in ('incr', 'decr', 'gauge', 'set', 'timing'):
             return partial(self._passthrough, name)
         else:
-            return super(LazyClient, self).__getattr__(name)
+            message = "'{cls}' object has no attribute '{attr}'".format(
+                cls=self.__class__.__name__, attr=name
+            )
+            raise AttributeError(message)
 
     def _passthrough(self, name, *args, **kwargs):
         if self.enabled:
             return getattr(self.client, name)(*args, **kwargs)
+
+    def timer(self, *args, **kwargs):
+        if self.enabled:
+            return self.client.timer(*args, **kwargs)
+        else:
+            return MagicMock()
 
 
 class StatsD(DependencyProvider):

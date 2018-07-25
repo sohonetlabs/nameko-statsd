@@ -1,4 +1,4 @@
-from mock import call, patch
+from mock import Mock, call, patch
 import pytest
 
 from nameko_statsd.statsd_dep import LazyClient
@@ -80,5 +80,32 @@ class TestLazyClient(object):
     def test_getattr(self, stats_client_cls, stats_config):
         lc = LazyClient(**stats_config)
 
-        with pytest.raises(AttributeError):
+        with pytest.raises(AttributeError) as exc_info:
             lc.missing_method()
+
+        assert exc_info.match(
+            "'LazyClient' object has no attribute 'missing_method'"
+        )
+
+    def test_timer_contextmanager_enabled(
+        self, stats_client_cls, stats_config
+    ):
+        lc = LazyClient(**stats_config)
+
+        with lc.timer('stat', rate=2) as timer:
+            pass
+
+        assert timer is lc.client.timer.return_value.__enter__.return_value
+        assert lc.client.timer.call_args_list == [call('stat', rate=2)]
+
+    def test_timer_contextmanager_disabled(
+        self, stats_client_cls, stats_config
+    ):
+        stats_config['enabled'] = False
+        lc = LazyClient(**stats_config)
+
+        with lc.timer('stat', rate=2) as timer:
+            pass
+
+        assert isinstance(timer, Mock)
+        assert lc.client.timer.call_args_list == []
