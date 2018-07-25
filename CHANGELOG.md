@@ -2,6 +2,14 @@ Release Notes
 =============
 
 
+Version 0.0.4
+-------------
+
+Released 2018-07-25
+
+* Enable use of `timer` as context manager, respecting the `enabled` setting.
+
+
 Version 0.0.3
 -------------
 
