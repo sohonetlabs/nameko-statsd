@@ -37,13 +37,19 @@ can use it within any of the service methods (entrypoints, simple methods, etc.)
             self.statsd.gauge(value)
             ...
 
+        def another_method(self, data):
+            ...
+            with self.statsd.timer('another_timer', rate=2):
+                ...
+
 
 The ``statsd.StatsClient`` instance exposes a set of methods that you can
 access without having to go through the client itself.  The dependency
 acts as a pass-through for them.  They are: ``incr``, ``decr``, ``gauge``,
-``set``, and ``timing``.
+``set``, ``timer`` and ``timing``.
 
-In the above code example, you can see how we access ``incr`` and ``gauge``.
+In the above code example, you can see how we access ``incr``, ``gauge`` and
+``timer``.
 
 You can also decorate any method in the service with the ``timer`` decorator,
 as shown in the example.  This allows you to time any method without having
@@ -158,19 +164,12 @@ is equivalent to the following:
 
         @entrypoint
         def method(...):
-            with self.statsd.client.timer('my_stat', rate=5):
+            with self.statsd.timer('my_stat', rate=5):
                 # method body
 
         def another_method(...):
-            with self.statsd.client.timer('another-stat'):
+            with self.statsd.timer('another-stat'):
                 # method body
-
-
-.. warning::
-    When using ``self.statsd.client.timer`` as a context manager, you're
-    bypassing the dependency, which means that the timer will be acted
-    regardless of how the ``enabled`` setting is configured.
-
 
 
 About the lazy client
