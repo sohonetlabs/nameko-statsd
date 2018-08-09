@@ -91,7 +91,7 @@ production 2 is not. You can set ``protocol`` to ``tcp`` (case insensitive) to
 use the TCP based ``statsd.TCPStatsClient``, if ``protol`` is omitted (or set
 to ``udp``) the default UDP based ``statsd.StatsClient`` will be used. All
 remaining values are passed directly to ``statsd.StatsClient`` (or
-``TCPStatsClient``) on creation.
+``statsd.TCPStatsClient``) on creation.
 
 
 Minimum setup
