@@ -1,8 +1,14 @@
+from enum import Enum
 from functools import wraps, partial
 from mock import MagicMock
 
 from nameko.extensions import DependencyProvider
-from statsd import StatsClient
+from statsd import StatsClient, TCPStatsClient
+
+
+class Protocols(Enum):
+    tcp = 'tcp'
+    udp = 'udp'
 
 
 class LazyClient(object):
@@ -11,19 +17,27 @@ class LazyClient(object):
     """
 
     def __init__(self, **config):
-        self.config = dict(
-            host=config['host'],
-            port=config['port'],
-            prefix=config['prefix'],
-            maxudpsize=config['maxudpsize'],
-        )
-        self.enabled = config['enabled']
+        self.config = config
+        self.enabled = config.pop('enabled')
         self._client = None
+
+        protocol = self.config.pop('protocol', 'udp')
+
+        try:
+            self.protocol = getattr(Protocols, protocol.lower())
+        except AttributeError:
+            raise ValueError(
+                'Invalid protocol: {}'.format(protocol)
+            )
 
     @property
     def client(self):
         if self._client is None:
-            self._client = StatsClient(**self.config)
+            if self.protocol is Protocols.udp:
+                self._client = StatsClient(**self.config)
+            else:   # self.protocol is Protocols.tcp
+                self._client = TCPStatsClient(**self.config)
+
         return self._client
 
     def __getattr__(self, name):
