@@ -4,7 +4,7 @@ nameko-statsd
 .. image:: https://travis-ci.org/sohonetlabs/nameko-statsd.svg?branch=master
 
 A StatsD dependency for `nameko <http://nameko.readthedocs.org>`_, enabling
-services to send stats.
+services to send stats using `pystatsd <http://statsd.readthedocs.org>`_.
 
 
 
@@ -60,33 +60,38 @@ to change its logic.
 Configuration
 -------------
 
-The library expects the following values to be in the config file you
-use for your service (you need one configuration block per different
-statsd server).  For example, if we had two statsd servers, prod1 and
-prod2, we would have something like this:
+The library accepts any arguments accepted by ``statsd.StatsClient`` or
+``statsd.TCPStatsClient`` in the service configuration file as well as two
+additional items that control the behaviour of the dependency itself
+(``enabled`` and ``protocol``). You need one configuration block per different
+statsd server.  For example, if we had two statsd servers, prod1 and
+prod2, we could have something like this:
 
 .. code-block:: yaml
 
     STATSD:
       prod1:
+        enabled: true
+        protocol: "udp"
         host: "host1"
         port: 8125
         prefix: "prefix-1"
         maxudpsize: 512
-        enabled: true
       prod2:
+        enabled: false
+        protocol: "tcp"
         host: "host2"
         port: 8125
         prefix: "prefix-2"
-        maxudpsize: 512
-        enabled: false
 
 
-The first four values are passed directly to ``statsd.StatsClient`` on
-creation.  The last one, ``enabled``, will activate/deactivate all stats,
-according to how it is set (``true``/``false``).  In this example,
-production 1 is enabled while production 2 is not.
-
+The ``enabled`` value will activate/deactivate all stats, according to how it
+is set (``true``/``false``).  In this example, production 1 is enabled while
+production 2 is not. You can set ``protocol`` to ``tcp`` (case insensitive) to
+use the TCP based ``statsd.TCPStatsClient``, if ``protol`` is omitted (or set
+to ``udp``) the default UDP based ``statsd.StatsClient`` will be used. All
+remaining values are passed directly to ``statsd.StatsClient`` (or
+``TCPStatsClient``) on creation.
 
 
 Minimum setup
