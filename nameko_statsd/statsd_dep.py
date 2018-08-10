@@ -21,7 +21,7 @@ class LazyClient(object):
         self.enabled = config.pop('enabled')
         self._client = None
 
-        protocol = self.config.pop('protocol', 'udp')
+        protocol = self.config.pop('protocol', Protocols.udp.name)
 
         try:
             self.protocol = getattr(Protocols, protocol.lower())
