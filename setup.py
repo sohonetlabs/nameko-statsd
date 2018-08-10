@@ -9,7 +9,7 @@ def reqs(filepath):
 
 setup(
     name='nameko-statsd',
-    version='0.0.4',
+    version='0.0.5',
     description='StatsD dependency for nameko services',
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',

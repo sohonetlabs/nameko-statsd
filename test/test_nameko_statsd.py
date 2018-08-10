@@ -36,6 +36,28 @@ class TestStatsD(object):
         ]
         assert dep == lazy_client_cls.return_value
 
+    def test_get_dependency_tcp(self, lazy_client_cls, stats_config):
+        statsd = StatsD('test-tcp')
+        statsd.container = Mock()
+        statsd.container.config = stats_config
+        statsd.setup()
+
+        worker_ctx = Mock()
+
+        dep = statsd.get_dependency(worker_ctx)
+
+        assert lazy_client_cls.call_args_list == [
+            call(
+                host='tcp.statsd.host',
+                port=4321,
+                prefix='tcp.statsd.prefix',
+                timeout=5,
+                enabled=True,
+                protocol='tcp'
+            )
+        ]
+        assert dep == lazy_client_cls.return_value
+
 
 class DummyService(ServiceBase):
 
@@ -69,6 +91,38 @@ class DummyServiceDisabled(ServiceBase):
         return sentinel
 
 
+class DummyServiceTCP(ServiceBase):
+
+    """Fake Service to test the `StatsD.timer` decorator. """
+
+    name = 'dummy_service'
+
+    statsd = StatsD('test-tcp')
+
+    @dummy
+    @statsd.timer('nice-tcp-stat', rate=3)
+    def method(self, *args, **kwargs):
+        sentinel = Mock()
+        sentinel(*args, **kwargs)
+        return sentinel
+
+
+class DummyServiceDisabledTCP(ServiceBase):
+
+    """Fake Service to test the `StatsD.timer` decorator when disabled. """
+
+    name = 'dummy_service'
+
+    statsd = StatsD('test-tcp-disabled')
+
+    @dummy
+    @statsd.timer('disabled-nice-tcp-stat')
+    def method(self, *args, **kwargs):
+        sentinel = Mock()
+        sentinel(*args, **kwargs)
+        return sentinel
+
+
 class DummyServiceManual(object):
 
     """Fake Service to test the `StatsD.timer` decorator without metaclass. """
@@ -93,9 +147,14 @@ class TestTimer(object):
     def config(self, stats_config):
         return stats_config.copy()
 
-    @pytest.fixture
+    @pytest.fixture(autouse=True)
     def stats_client_cls(self):
         with patch('nameko_statsd.statsd_dep.StatsClient') as sc:
+            yield sc
+
+    @pytest.fixture(autouse=True)
+    def stats_client_cls_tcp(self):
+        with patch('nameko_statsd.statsd_dep.TCPStatsClient') as sc:
             yield sc
 
     def test_enabled_with_metaclass(
@@ -136,5 +195,34 @@ class TestTimer(object):
         client = stats_client_cls.return_value
 
         assert stats_client_cls.call_args_list == []
+        assert client.timer.call_args_list == []
+        assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
+
+    def test_enabled_tcp(
+        self, container_factory, config, stats_client_cls_tcp
+    ):
+        container = container_factory(DummyServiceTCP, config)
+        container.start()
+
+        with entrypoint_hook(container, 'method') as method:
+            sentinel = method(3, 1, 4, name='pi')
+
+        client = stats_client_cls_tcp.return_value
+
+        assert client.timer.call_args_list == [call('nice-tcp-stat', rate=3)]
+        assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
+
+    def test_disabled_tcp(
+        self, container_factory, config, stats_client_cls_tcp
+    ):
+        container = container_factory(DummyServiceDisabledTCP, config)
+        container.start()
+
+        with entrypoint_hook(container, 'method') as method:
+            sentinel = method(3, 1, 4, name='pi')
+
+        client = stats_client_cls_tcp.return_value
+
+        assert stats_client_cls_tcp.call_args_list == []
         assert client.timer.call_args_list == []
         assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
