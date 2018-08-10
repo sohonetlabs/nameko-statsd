@@ -19,5 +19,21 @@ def stats_config():
                 'maxudpsize': 128,
                 'enabled': False,
             },
+            'test-tcp': {
+                'host': 'tcp.statsd.host',
+                'port': 4321,
+                'prefix': 'tcp.statsd.prefix',
+                'timeout': 5,
+                'enabled': True,
+                'protocol': 'tcp',
+            },
+            'test-tcp-disabled': {
+                'host': 'tcp.statsd.host.disabled',
+                'port': 5432,
+                'prefix': 'tcp.statsd.prefix.disabled',
+                'timeout': 10,
+                'enabled': False,
+                'protocol': 'tcp',
+            },
         }
     }

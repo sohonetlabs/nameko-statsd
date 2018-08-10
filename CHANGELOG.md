@@ -2,6 +2,13 @@ Release Notes
 =============
 
 
+Version 0.0.5
+-------------
+
+Release Pending
+
+* Enable use of TCP instead of UDP.
+
 Version 0.0.4
 -------------
 
