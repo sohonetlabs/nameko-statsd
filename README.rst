@@ -88,7 +88,7 @@ prod2, we could have something like this:
 The ``enabled`` value will activate/deactivate all stats, according to how it
 is set (``true``/``false``).  In this example, production 1 is enabled while
 production 2 is not. You can set ``protocol`` to ``tcp`` (case insensitive) to
-use the TCP based ``statsd.TCPStatsClient``, if ``protol`` is omitted (or set
+use the TCP based ``statsd.TCPStatsClient``, if ``protocol`` is omitted (or set
 to ``udp``) the default UDP based ``statsd.StatsClient`` will be used. All
 remaining values are passed directly to ``statsd.StatsClient`` (or
 ``statsd.TCPStatsClient``) on creation.
