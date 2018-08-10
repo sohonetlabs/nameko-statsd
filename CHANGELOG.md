@@ -5,7 +5,7 @@ Release Notes
 Version 0.0.5
 -------------
 
-Release Pending
+Released 2018-08-10
 
 * Enable use of TCP instead of UDP.
 
