@@ -2,6 +2,15 @@ Release Notes
 =============
 
 
+Version 0.0.6
+-------------
+
+Release Pending
+
+* Fix a bug in the `ServiceBaseMeta` metaclass which caused classes to have the
+  wrong name.
+
+
 Version 0.0.5
 -------------
 
