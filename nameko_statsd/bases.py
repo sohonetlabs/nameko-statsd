@@ -11,9 +11,9 @@ class ServiceBaseMeta(type):
 
     def __new__(cls, name, bases, attrs):
 
-        for name, obj in attrs.items():
+        for attr_name, obj in attrs.items():
             if isinstance(obj, StatsD):
-                obj._name = name
+                obj._name = attr_name
 
         return type.__new__(cls, name, bases, attrs)
 
