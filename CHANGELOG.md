@@ -5,7 +5,7 @@ Release Notes
 Version 0.0.6
 -------------
 
-Release Pending
+Released 2018-11-14
 
 * Fix a bug in the `ServiceBaseMeta` metaclass which caused classes to have the
   wrong name.
