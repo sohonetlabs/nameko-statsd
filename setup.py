@@ -7,10 +7,14 @@ def reqs(filepath):
         return [line.strip() for line in stream.readlines()]
 
 
+description = 'StatsD dependency for nameko services.'
+
+
 setup(
     name='nameko-statsd',
     version='0.0.6',
-    description='StatsD dependency for nameko services',
+    description=description,
+    long_description=description,
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',
     url='https://github.com/sohonetlabs/nameko-statsd',
