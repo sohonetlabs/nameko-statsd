@@ -21,3 +21,4 @@ class ServiceBaseMeta(type):
 @add_metaclass(ServiceBaseMeta)
 class ServiceBase(object):
     """Service base class. """
+    pass
