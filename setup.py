@@ -24,7 +24,7 @@ setup(
         'dev': reqs('requirements/dev.txt'),
     },
     zip_safe=True,
-    license='MIT',
+    license='MIT License',
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
