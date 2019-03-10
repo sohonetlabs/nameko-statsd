@@ -1,7 +1,17 @@
-nameko-statsd
+Nameko StatsD
 =============
 
+.. image:: https://img.shields.io/pypi/v/nameko-statsd.svg
+    :target: https://pypi.org/project/nameko-statsd/
+
+.. image:: https://img.shields.io/pypi/pyversions/nameko-statsd.svg
+    :target: https://pypi.org/project/nameko-statsd/
+
+.. image:: https://img.shields.io/pypi/format/nameko-statsd.svg
+    :target: https://pypi.org/project/nameko-statsd/
+
 .. image:: https://travis-ci.org/sohonetlabs/nameko-statsd.svg?branch=master
+    :target: https://travis-ci.org/sohonetlabs/nameko-statsd
 
 A StatsD dependency for `nameko <http://nameko.readthedocs.org>`_, enabling
 services to send stats using `pystatsd <http://statsd.readthedocs.org>`_.
@@ -12,7 +22,8 @@ Usage
 -----
 
 To use the dependency you simply declare it on the service and then you
-can use it within any of the service methods (entrypoints, simple methods, etc.).
+can use it within any of the service methods (entrypoints, simple methods,
+etc.).
 
 
 .. code-block:: python
