@@ -1,2 +1,9 @@
 include requirements/base.txt
 include requirements/dev.txt
+include CHANGELOG.md
+include CONTRIBUTORS.txt
+include LICENSE
+include README.rst
+
+global-exclude __pycache__
+global-exclude *.pyc
