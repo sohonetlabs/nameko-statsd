@@ -15,6 +15,7 @@ setup(
     version='0.0.6',
     description=description,
     long_description=description,
+    long_description_content_type='text/x-rst',
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',
     url='https://github.com/sohonetlabs/nameko-statsd',
