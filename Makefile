@@ -10,7 +10,7 @@ rst-lint:
 	rst-lint README.rst
 
 flake8:
-	flake8 $(PACKAGE_NAME) test
+	flake8 $(PACKAGE_NAME) test setup.py
 
 pytest:
 	coverage run --concurrency=eventlet --source $(PACKAGE_NAME) --branch \
