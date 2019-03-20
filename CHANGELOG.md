@@ -1,6 +1,22 @@
 Release Notes
 =============
 
+Here you can see the full list of changes between
+nameko-statsd versions, where semantic versioning is used:
+*major.minor.patch*.
+
+Backwards-compatible changes increment the minor version number only.
+
+
+Version 0.1.0
+-------------
+
+Release Pending
+
+* Add support for Python 3.7 (#10)
+* Add Nameko ``2.11`` and ``2.12`` support (#10)
+* Switch to semantic versioning (#10)
+
 
 Version 0.0.6
 -------------

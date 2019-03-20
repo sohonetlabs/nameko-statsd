@@ -1,8 +1,18 @@
-test: flake8 pytest
+.PHONY: test
+
+
+PACKAGE_NAME=nameko_statsd
+
+
+test: rst-lint flake8 pytest
+
+rst-lint:
+	rst-lint README.rst
 
 flake8:
-	flake8 nameko_statsd test
+	flake8 $(PACKAGE_NAME) test setup.py
 
 pytest:
-	coverage run --concurrency=eventlet --source nameko_statsd --branch -m pytest $(ARGS) test
+	coverage run --concurrency=eventlet --source $(PACKAGE_NAME) --branch \
+		-m pytest $(ARGS) test
 	coverage report --show-missing --fail-under=100

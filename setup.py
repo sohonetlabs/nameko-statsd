@@ -12,9 +12,10 @@ description = 'StatsD dependency for nameko services.'
 
 setup(
     name='nameko-statsd',
-    version='0.0.6',
+    version='0.1.0',
     description=description,
     long_description=description,
+    long_description_content_type='text/x-rst',
     author='Sohonet product team',
     author_email='fabrizio.romano@sohonet.com',
     url='https://github.com/sohonetlabs/nameko-statsd',
@@ -24,11 +25,13 @@ setup(
         'dev': reqs('requirements/dev.txt'),
     },
     zip_safe=True,
-    license='MIT',
+    license='MIT License',
     classifiers=[
-        "Programming Language :: Python",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX",
+        "Programming Language :: Python",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
@@ -38,6 +41,5 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Intended Audience :: Developers",
     ]
 )
