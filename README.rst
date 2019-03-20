@@ -199,3 +199,9 @@ a client is created.
 This lazy feature means you can attach as many ``nameko_statsd.StatsD``
 dependencies to your service as you fancy, and no client will be created
 unless it is actually used.
+
+
+Nameko support
+--------------
+
+The following Nameko versions are supported: ``2.11``, ``2.12``.
