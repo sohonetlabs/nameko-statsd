@@ -12,7 +12,7 @@ description = 'StatsD dependency for nameko services.'
 
 setup(
     name='nameko-statsd',
-    version='0.0.6',
+    version='0.1.0',
     description=description,
     long_description=description,
     long_description_content_type='text/x-rst',
