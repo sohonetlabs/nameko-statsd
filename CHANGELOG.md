@@ -11,7 +11,7 @@ Backwards-compatible changes increment the minor version number only.
 Version 0.1.0
 -------------
 
-Release Pending
+Release 2019-03-21
 
 * Add support for Python 3.7 (#10)
 * Add Nameko ``2.11`` and ``2.12`` support (#10)
