@@ -1,6 +1,6 @@
-from six import add_metaclass
+from warnings import warn
 
-from .statsd_dep import StatsD
+from six import add_metaclass
 
 
 class ServiceBaseMeta(type):
@@ -10,10 +10,12 @@ class ServiceBaseMeta(type):
     """
 
     def __new__(cls, name, bases, attrs):
-
-        for attr_name, obj in attrs.items():
-            if isinstance(obj, StatsD):
-                obj._name = attr_name
+        warn(
+            "Use of the `ServiceBaseMeta` metaclass is no longer needed."
+            " `ServiceBaseMeta` is deprecated and will be removed in a future"
+            " release of `nameko-statsd`.",
+            DeprecationWarning
+        )
 
         return type.__new__(cls, name, bases, attrs)
 

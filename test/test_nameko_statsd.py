@@ -1,3 +1,5 @@
+import warnings
+
 from mock import call, Mock, patch
 import pytest
 from nameko.testing.services import dummy, entrypoint_hook
@@ -57,6 +59,17 @@ class TestStatsD(object):
             )
         ]
         assert dep == lazy_client_cls.return_value
+
+    def test_name_argument_deprecated(self, recwarn):
+        warnings.simplefilter("always")
+        StatsD('test', name='statsd')
+
+        assert len(recwarn) == 1
+        warn = recwarn.pop()
+        assert str(warn.message) == (
+            "The `name` argument to `StatsD` is no longer needed and has been"
+            " deprecated."
+        )
 
 
 class DummyService(object):
