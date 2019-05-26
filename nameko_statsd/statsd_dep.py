@@ -88,7 +88,7 @@ class StatsD(DependencyProvider):
 
             @wraps(method)
             def wrapper(svc, *args, **kwargs):
-                dependency = getattr(svc, self._name)
+                dependency = getattr(svc, self.attr_name)
 
                 if dependency.enabled:
                     with dependency.client.timer(*targs, **tkwargs):

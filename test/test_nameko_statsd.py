@@ -59,7 +59,7 @@ class TestStatsD(object):
         assert dep == lazy_client_cls.return_value
 
 
-class DummyService(ServiceBase):
+class DummyService(object):
 
     """Fake Service to test the `StatsD.timer` decorator. """
 
@@ -75,7 +75,7 @@ class DummyService(ServiceBase):
         return sentinel
 
 
-class DummyServiceDisabled(ServiceBase):
+class DummyServiceDisabled(object):
 
     """Fake Service to test the `StatsD.timer` decorator when disabled. """
 
@@ -91,7 +91,7 @@ class DummyServiceDisabled(ServiceBase):
         return sentinel
 
 
-class DummyServiceTCP(ServiceBase):
+class DummyServiceTCP(object):
 
     """Fake Service to test the `StatsD.timer` decorator. """
 
@@ -107,7 +107,7 @@ class DummyServiceTCP(ServiceBase):
         return sentinel
 
 
-class DummyServiceDisabledTCP(ServiceBase):
+class DummyServiceDisabledTCP(object):
 
     """Fake Service to test the `StatsD.timer` decorator when disabled. """
 
@@ -125,7 +125,29 @@ class DummyServiceDisabledTCP(ServiceBase):
 
 class DummyServiceManual(object):
 
-    """Fake Service to test the `StatsD.timer` decorator without metaclass. """
+    """
+    Fake Service to test the `StatsD.timer` decorator, using the deprecated
+    `name` argument
+    """
+
+    name = 'dummy_service'
+
+    statsd = StatsD('test', name='statsd')
+
+    @dummy
+    @statsd.timer('nice-stat', rate=3)
+    def method(self, *args, **kwargs):
+        sentinel = Mock()
+        sentinel(*args, **kwargs)
+        return sentinel
+
+
+class DummyServiceMeta(ServiceBase):
+
+    """
+    Fake Service to test the `StatsD.timer` decorator with the deprecated
+    metaclass
+    """
 
     name = 'dummy_service'
 
@@ -157,9 +179,7 @@ class TestTimer(object):
         with patch('nameko_statsd.statsd_dep.TCPStatsClient') as sc:
             yield sc
 
-    def test_enabled_with_metaclass(
-        self, container_factory, config, stats_client_cls
-    ):
+    def test_enabled(self, container_factory, config, stats_client_cls):
         container = container_factory(DummyService, config)
         container.start()
 
@@ -171,7 +191,21 @@ class TestTimer(object):
         assert client.timer.call_args_list == [call('nice-stat', rate=3)]
         assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
 
-    def test_enabled_no_metaclass(
+    def test_enabled_with_metaclass(
+        self, container_factory, config, stats_client_cls
+    ):
+        container = container_factory(DummyServiceMeta, config)
+        container.start()
+
+        with entrypoint_hook(container, 'method') as method:
+            sentinel = method(3, 1, 4, name='pi')
+
+        client = stats_client_cls.return_value
+
+        assert client.timer.call_args_list == [call('nice-stat', rate=3)]
+        assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
+
+    def test_enabled_name_argument(
         self, container_factory, config, stats_client_cls
     ):
         container = container_factory(DummyServiceManual, config)
