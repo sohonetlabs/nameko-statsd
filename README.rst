@@ -28,9 +28,9 @@ etc.).
 
 .. code-block:: python
 
-    from nameko_statsd import StatsD, ServiceBase
+    from nameko_statsd import StatsD
 
-    class Service(ServiceBase):
+    class Service:
 
         statsd = StatsD('prod1')
 
@@ -105,48 +105,6 @@ remaining values are passed directly to ``statsd.StatsClient`` (or
 ``statsd.TCPStatsClient``) on creation.
 
 
-Minimum setup
--------------
-
-At the time of writing a Nameko service, you don't have access to the
-config values.  This means that when we write our service we don't have
-access to the actual dependencies (they are injected later).
-
-In order to give the users of this library the ability to decorate
-methods with the ``timer`` decorator, we need to do a little wiring
-behind the scenes.  The only thing required for the end user is to write
-the service class so that it inherits from ``nameko_statsd.ServiceBase``.
-
-The *type* of ``nameko_statsd.ServiceBase`` is a custom metaclass that
-provides the necessary wirings to any ``nameko_statsd.StatsD`` dependency.
-
-If you cannot inherit from ``nameko_statsd.ServiceBase`` for any reason,
-all you have to do is to make sure you pass a ``name`` argument to any
-``nameko_statsd.StatsD`` dependency, the value of which has to match the
-attribute name of the dependency itself.
-
-The following configuration:
-
-.. code-block:: python
-
-    class MyService(ServiceBase):
-
-        statsd = StatsD('prod1')
-
-        ...
-
-is equivalent to (notice it inherits from ``object``):
-
-.. code-block:: python
-
-    class MyService(object):
-
-        statsd = StatsD('prod1', name='statsd')
-
-        ...
-
-
-
 The ``StatsD.timer`` decorator
 ------------------------------
 
@@ -157,7 +115,7 @@ So, for example:
 
 .. code-block:: python
 
-    class MyService(ServiceBase):
+    class MyService:
 
         statsd = StatsD('prod1')
 
@@ -174,7 +132,7 @@ is equivalent to the following:
 
 .. code-block:: python
 
-    class MyService(ServiceBase):
+    class MyService:
 
         statsd = StatsD('prod1')
 
@@ -205,3 +163,19 @@ Nameko support
 --------------
 
 The following Nameko versions are supported: ``2.11``, ``2.12``.
+
+
+Deprecation of the ``ServiceBase`` base class and ``name`` argument
+-------------------------------------------------------------------
+
+In previous versions of ``nameko-statsd``, the ``timer`` decorator could only
+be used if the service class inherited from  ``nameko_statsd.ServiceBase`` or
+if the correct ``name`` argument was passed to the ``nameko_statsd.StatsD``
+dependency provider.
+
+Since version ``0.1.1``, ``nameko_statsd.StatsD`` is able
+to determine the correct attribute name when ``nameko`` binds the dependency
+provider to the service. Therefore, ``name`` argument to the
+``nameko_statsd.StatsD`` dependency provider, the ``nameko_statsd.ServiceBase``
+base class (and the associated metaclass) have been deprecated and will be
+removed in a future release.
