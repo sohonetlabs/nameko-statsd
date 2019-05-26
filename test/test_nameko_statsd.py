@@ -164,7 +164,7 @@ class DummyServiceMeta(ServiceBase):
 
     name = 'dummy_service'
 
-    statsd = StatsD('test', name='statsd')
+    statsd = StatsD('test')
 
     @dummy
     @statsd.timer('nice-stat', rate=3)
