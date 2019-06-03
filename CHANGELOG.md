@@ -8,6 +8,14 @@ nameko-statsd versions, where semantic versioning is used:
 Backwards-compatible changes increment the minor version number only.
 
 
+Version 0.1.1
+-------------
+
+* Deprecate the `ServiceBaseMeta` metaclass and the `name` argument to the
+  `StatsD` dependency provider.
+* Test on older Nameko versions and against pre-release versions of
+  dependencies.
+
 Version 0.1.0
 -------------
 

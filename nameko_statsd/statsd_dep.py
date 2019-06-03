@@ -1,6 +1,7 @@
 from enum import Enum
 from functools import wraps, partial
 from mock import MagicMock
+from warnings import warn
 
 from nameko.extensions import DependencyProvider
 from statsd import StatsClient, TCPStatsClient
@@ -69,7 +70,14 @@ class StatsD(DependencyProvider):
             name (str): The name associated to the instance.
         """
         self._key = key
-        self._name = name or ''
+
+        if name is not None:
+            warn(
+                "The `name` argument to `StatsD` is no longer needed and has"
+                " been deprecated.",
+                DeprecationWarning
+            )
+
         super(StatsD, self).__init__(*args, **kwargs)
 
     def get_dependency(self, worker_ctx):
@@ -88,7 +96,7 @@ class StatsD(DependencyProvider):
 
             @wraps(method)
             def wrapper(svc, *args, **kwargs):
-                dependency = getattr(svc, self._name)
+                dependency = getattr(svc, self.attr_name)
 
                 if dependency.enabled:
                     with dependency.client.timer(*targs, **tkwargs):
