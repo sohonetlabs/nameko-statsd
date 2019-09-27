@@ -205,3 +205,36 @@ class TestStatMethods(TestLazyClient):
 
         assert isinstance(timer, Mock)
         assert lc.client.timer.call_args_list == []
+
+    def test_pipeline_contextmanager_enabled(
+            self, stats_client_cls, stats_config
+        ):
+        lc = LazyClient(**stats_config)
+
+        with lc.pipeline() as pipeline:
+            pipeline.incr('foo')
+            pipeline.send()
+
+        assert pipeline is lc.client.pipeline.return_value.__enter__.return_value
+        assert lc.client.pipeline.call_args_list == [call()]
+        assert lc.client.pipeline.mock_calls == [
+            call(),
+            call().__enter__(),
+            call().__enter__().incr('foo'),
+            call().__enter__().send(),
+            call().__exit__(None, None, None)
+        ]
+
+    def test_pipeline_contextmanager_disabled(
+        self, stats_client_cls, stats_config
+    ):
+        stats_config['enabled'] = False
+        lc = LazyClient(**stats_config)
+
+        with lc.pipeline() as pipeline:
+            pipeline.incr('foo')
+            pipeline.send()
+
+        assert isinstance(pipeline, Mock)
+        assert lc.client.pipeline.call_args_list == []
+        assert lc.client.pipeline.mock_calls == []

@@ -60,6 +60,12 @@ class LazyClient(object):
         else:
             return MagicMock()
 
+    def pipeline(self, *args, **kwargs):
+        if self.enabled:
+            return self.client.pipeline(*args, **kwargs)
+        else:
+            return MagicMock()
+
 
 class StatsD(DependencyProvider):
 
