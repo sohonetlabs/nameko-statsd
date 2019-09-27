@@ -14,7 +14,7 @@ Version 0.1.1
 * Deprecate the `ServiceBaseMeta` metaclass and the `name` argument to the
   `StatsD` dependency provider.
 * Add support for pipeline when disabled
-* Test on older Nameko versions and against pre-release versions of
+* Test on older Nameko versions (back to 2.7) and against pre-release versions of
   dependencies.
 * Test on Python 3.8
 
