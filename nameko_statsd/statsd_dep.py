@@ -97,7 +97,43 @@ class StatsD(DependencyProvider):
         return self.container.config['STATSD'][self._key]
 
     def timer(self, *targs, **tkwargs):
+        """Decorate a nameko service method.
 
+        It can be applied to any instance method in a nameko service class,
+        even to RPC or HTTP entrypoints.  If `dependency.enabled` is `False`
+        this decorator is equivalent to a no-op.
+
+        Args:
+            *targs: Positional arguments to be given to `StatsClient.timer()`.
+            *tkwargs: Keyword arguments to be given to `StatsClient.timer()`.
+
+        Decorating a service like this:
+
+        .. code-block:: python
+
+            class MyService:
+
+                statsd = StatsD('config_key')
+
+                @rpc (or @http or even nothing)
+                @statsd.timer('my_stat', rate=5)
+                def method(...):
+                    # method body
+
+        is equivalent to the following:
+
+        .. code-block:: python
+
+            class MyService:
+
+                statsd = StatsD('config_key')
+
+                @rpc (or @http or even nothing)
+                def method(...):
+                    with self.statsd.client.timer('my_stat', rate=5):
+                        # method body
+
+        """
         def decorator(method):
 
             @wraps(method)
