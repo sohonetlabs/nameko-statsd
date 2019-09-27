@@ -142,7 +142,7 @@ class TestStatMethods(TestLazyClient):
         return stats_config['STATSD'][request.param].copy()
 
     @pytest.mark.parametrize('method', [
-        'incr', 'decr', 'gauge', 'set', 'timing'
+        'incr', 'decr', 'gauge', 'set', 'timing', 'pipeline',
     ])
     def test_passthrough_methods(self, method, stats_config):
         lc = LazyClient(**stats_config)
@@ -158,7 +158,7 @@ class TestStatMethods(TestLazyClient):
         ]
 
     @pytest.mark.parametrize('method', [
-        'incr', 'decr', 'gauge', 'set', 'timing'
+        'incr', 'decr', 'gauge', 'set', 'timing', 'pipeline',
     ])
     def test_passthrough_disabled(
         self, method, stats_config
