@@ -216,7 +216,6 @@ class TestStatMethods(TestLazyClient):
             pipe.send()
 
         assert pipe is lc.client.pipeline.return_value.__enter__.return_value
-        assert lc.client.pipeline.call_args_list == [call()]
         assert lc.client.pipeline.mock_calls == [
             call(),
             call().__enter__(),
@@ -236,5 +235,4 @@ class TestStatMethods(TestLazyClient):
             pipe.send()
 
         assert isinstance(pipe, Mock)
-        assert lc.client.pipeline.call_args_list == []
         assert lc.client.pipeline.mock_calls == []
