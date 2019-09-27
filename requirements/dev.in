@@ -1,5 +1,7 @@
 coverage
 flake8
+# Restricted until eventlet works with Pytest 5
+# https://github.com/pytest-dev/pytest/issues/5725
 pytest<5.0.0
 restructuredtext-lint
 Pygments
