@@ -158,7 +158,7 @@ class TestStatMethods(TestLazyClient):
         ]
 
     @pytest.mark.parametrize('method', [
-        'incr', 'decr', 'gauge', 'set', 'timing', 'pipeline',
+        'incr', 'decr', 'gauge', 'set', 'timing', 'timer', 'pipeline',
     ])
     def test_passthrough_disabled(
         self, method, stats_config
