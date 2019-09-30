@@ -142,7 +142,7 @@ class TestStatMethods(TestLazyClient):
         return stats_config['STATSD'][request.param].copy()
 
     @pytest.mark.parametrize('method', [
-        'incr', 'decr', 'gauge', 'set', 'timing'
+        'incr', 'decr', 'gauge', 'set', 'timing', 'timer', 'pipeline',
     ])
     def test_passthrough_methods(self, method, stats_config):
         lc = LazyClient(**stats_config)
@@ -158,7 +158,7 @@ class TestStatMethods(TestLazyClient):
         ]
 
     @pytest.mark.parametrize('method', [
-        'incr', 'decr', 'gauge', 'set', 'timing'
+        'incr', 'decr', 'gauge', 'set', 'timing', 'timer', 'pipeline',
     ])
     def test_passthrough_disabled(
         self, method, stats_config
@@ -205,3 +205,34 @@ class TestStatMethods(TestLazyClient):
 
         assert isinstance(timer, Mock)
         assert lc.client.timer.call_args_list == []
+
+    def test_pipeline_contextmanager_enabled(
+            self, stats_client_cls, stats_config
+    ):
+        lc = LazyClient(**stats_config)
+
+        with lc.pipeline() as pipe:
+            pipe.incr('foo')
+            pipe.send()
+
+        assert pipe is lc.client.pipeline.return_value.__enter__.return_value
+        assert lc.client.pipeline.mock_calls == [
+            call(),
+            call().__enter__(),
+            call().__enter__().incr('foo'),
+            call().__enter__().send(),
+            call().__exit__(None, None, None)
+        ]
+
+    def test_pipeline_contextmanager_disabled(
+        self, stats_client_cls, stats_config
+    ):
+        stats_config['enabled'] = False
+        lc = LazyClient(**stats_config)
+
+        with lc.pipeline() as pipe:
+            pipe.incr('foo')
+            pipe.send()
+
+        assert isinstance(pipe, Mock)
+        assert lc.client.pipeline.mock_calls == []
