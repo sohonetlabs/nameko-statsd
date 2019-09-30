@@ -10,7 +10,7 @@ Backwards-compatible changes increment the minor version number only.
 
 Version 0.1.2
 -------------
-* Remove Python 3.4 requirements
+* Only install enum backport when needed
 
 Version 0.1.1
 -------------
