@@ -2,7 +2,8 @@ import warnings
 
 from mock import call, Mock, patch
 import pytest
-from nameko.testing.services import dummy, entrypoint_hook
+from nameko.testing.services import dummy, entrypoint_hook, worker_factory
+from nameko.rpc import rpc
 
 from nameko_statsd.statsd_dep import StatsD
 from nameko_statsd.bases import ServiceBase
@@ -174,6 +175,22 @@ class DummyServiceMeta(ServiceBase):
         return sentinel
 
 
+class RPCDummyService(object):
+
+    """Fake Service to test the `StatsD.timer` decorator. """
+
+    name = 'dummy_service'
+
+    statsd = StatsD('test')
+
+    @rpc
+    @statsd.timer('nice-stat', rate=3)
+    def method(self, *args, **kwargs):
+        sentinel = Mock()
+        sentinel(*args, **kwargs)
+        return sentinel
+
+
 class TestTimer(object):
 
     """Test the `StatsD.timer` decorator. """
@@ -271,5 +288,16 @@ class TestTimer(object):
         client = stats_client_cls_tcp.return_value
 
         assert stats_client_cls_tcp.call_args_list == []
+        assert client.timer.call_args_list == []
+        assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
+
+    def test_worker_factory(self, config, stats_client_cls):
+        service = worker_factory(RPCDummyService)
+        service.config = config
+
+        sentinel = service.method(3, 1, 4, name='pi')
+
+        client = stats_client_cls.return_value
+
         assert client.timer.call_args_list == []
         assert sentinel.call_args_list == [call(3, 1, 4, name='pi')]
