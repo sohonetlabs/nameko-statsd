@@ -138,6 +138,12 @@ class StatsD(DependencyProvider):
 
             @wraps(method)
             def wrapper(svc, *args, **kwargs):
+                # self.attr_name starts as None, then is set to the name of
+                # the attribute when bind is called. Until then, the decorator
+                # does nothing
+                if self.attr_name is None:
+                    return method(svc, *args, **kwargs)
+
                 dependency = getattr(svc, self.attr_name)
 
                 if dependency.enabled:
