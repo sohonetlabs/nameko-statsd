@@ -8,6 +8,10 @@ nameko-statsd versions, where semantic versioning is used:
 Backwards-compatible changes increment the minor version number only.
 
 
+Version 0.1.3
+-------------
+* Prevent timer decorator and tests using worker_factory from failing
+
 Version 0.1.2
 -------------
 * Only install enum backport when needed
