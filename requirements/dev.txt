@@ -1,5 +1,6 @@
 coverage
 flake8
-pytest
+pytest<5.0.0
 restructuredtext-lint
 Pygments
+pytest-eventlet

@@ -5,3 +5,4 @@ flake8
 pytest<5.0.0
 restructuredtext-lint
 Pygments
+pytest-eventlet
