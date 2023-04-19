@@ -10,7 +10,7 @@ Backwards-compatible changes increment the minor version number only.
 
 Version 0.1.4
 -------------
-* Drop support for Python < 3.6
+* Drop support for Python < 3.6. Add tests for new Python and Nameko 2.x versions.
 
 Version 0.1.3
 -------------
