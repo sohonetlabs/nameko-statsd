@@ -162,7 +162,7 @@ unless it is actually used.
 Nameko support
 --------------
 
-The following Nameko versions are supported: ``2.13``, ``2.14``
+The following Nameko versions are supported: ``2.12``, ``2.13``, ``2.14``
 
 
 Deprecation of the ``ServiceBase`` base class and ``name`` argument
