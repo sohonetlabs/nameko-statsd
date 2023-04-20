@@ -12,7 +12,7 @@ description = 'StatsD dependency for nameko services.'
 
 setup(
     name='nameko-statsd',
-    version='0.1.3',
+    version='0.1.4',
     description=description,
     long_description=description,
     long_description_content_type='text/x-rst',
@@ -20,6 +20,7 @@ setup(
     author_email='fabrizio.romano@sohonet.com',
     url='https://github.com/sohonetlabs/nameko-statsd',
     packages=['nameko_statsd'],
+    python_requires='>=3.6',
     install_requires=reqs('requirements/base.txt'),
     extras_require={
         'dev': reqs('requirements/dev.txt'),
@@ -32,12 +33,11 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ]

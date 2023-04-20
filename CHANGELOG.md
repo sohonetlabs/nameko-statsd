@@ -8,6 +8,10 @@ nameko-statsd versions, where semantic versioning is used:
 Backwards-compatible changes increment the minor version number only.
 
 
+Version 0.1.4
+-------------
+* Drop support for Python < 3.6. Add tests for new Python and Nameko 2.x versions.
+
 Version 0.1.3
 -------------
 * Prevent timer decorator and tests using worker_factory from failing
